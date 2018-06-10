@@ -13,17 +13,20 @@
 <body>
     <div class="container">
         <div class="row justify-content-center">
-                <h1>todos</h1>
+            <h1>todos</h1>
         </div>
         <div class="row justify-content-center">
-            <form class="col-md-4" action="">
-                <input id="create" type="text" name="todo" placeholder="What needs to be done?" autofocus>
-            </form>
-            <button class="col-md-1">Enter</button>
+            <div class="all-checkbox"></div>
+            <div class="col-md-4 notes">
+                <div class="wrap">
+                    <input id="create" type="text" placeholder="What needs to be done?" autofocus>
+                </div>
+            </div>
+            <button id="enter" class="col-md-1 align-self-start">Enter</button>
         </div>
-    </div> 
+    </div>
     <script src="js/lodash.js"></script>
-    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
 </body>
