@@ -3,9 +3,13 @@ body {
   padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p, li {
+h1, h2, h3, h4, h5, h6, p, ul, li, label {
   margin: 0;
   padding: 0;
+}
+
+li {
+  list-style: none;
 }
 
 h1 {
@@ -14,16 +18,17 @@ h1 {
   padding: 10px 0 20px 0;
 }
 
-#create {
+input {
   border: none;
 }
 
-input[name="todo"],
-input[name="edit"],
-button,
-#create {
+input:focus {
+  outline: none;
+}
+
+#new-task {
   height: 50px;
-  width: 100%;
+  width: 300px;
 }
 
 .wrapper-text-style {
@@ -31,7 +36,6 @@ button,
 }
 
 .notes {
-  position: relative;
   /*&::before{
         content: '';
         display: block;
@@ -47,6 +51,7 @@ button,
 }
 
 button {
+  width: 100px;
   opacity: 0.5;
 }
 
@@ -54,21 +59,10 @@ button {
   padding-left: 30px;
 }
 
-.list {
-  position: relative;
-}
-
-.list-input-text-style {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
 .list .delete {
   width: 25px;
   height: 25px;
-  position: absolute;
-  right: 20px;
-  top: 12px;
+  margin-left: 10px;
   background: url(img/icon_delete.png) no-repeat;
   background-size: 25px, 25px;
   opacity: 0.5;
@@ -82,9 +76,6 @@ button {
 .all-checkbox {
   width: 32px;
   height: 32px;
-  position: absolute;
-  left: 10%;
-  top: 10px;
   background: url(img/arrow-down.png) no-repeat;
   opacity: 0.3;
 }
@@ -97,7 +88,44 @@ button {
   cursor: pointer;
 }
 
-.row {
-  position: relative;
+input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
 }
+
+input[name="todo"] {
+  width: 380px;
+  display: none;
+  padding: 10px 10px 10px 8px;
+}
+
+label {
+  width: 380px;
+  padding: 10px 10px 10px 8px;
+  overflow: hidden;
+}
+
+.line-through {
+  text-decoration: line-through;
+}
+
+.edit input[name="todo"] {
+  display: block;
+}
+
+.edit label {
+  display: none;
+}
+
+.line {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+/*
+label{
+    position: absolute;
+    top: 0;
+    left: 32px;
+    z-index: 10;
+}*/
 /*# sourceMappingURL=style.css.map */

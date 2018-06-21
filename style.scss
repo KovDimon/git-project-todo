@@ -4,28 +4,30 @@ body{
     @include clear; 
 }
 
-h1, h2, h3,h4, h5, h6, p, li{
+h1, h2, h3,h4, h5, h6, p,ul, li,label{
     @include clear;
-  }
+}
+
+li{
+    list-style: none;
+}
 
 h1{
     opacity: 0.3;
     font-size: 70px;
     padding: 10px 0 20px 0;
 }
-#create{
+input{
     border: none;
     &:focus{
-        //outline: none;
+        outline: none;
     }
 }
 
-input[name="todo"],
-input[name="edit"],
-button,
-#create{
+//input[name="edit"],
+#new-task{
     height: 50px;
-    width: 100%;
+    width: 300px;
     //text-decoration: line-through;
     //-webkit-user-select: none;
 }
@@ -38,7 +40,6 @@ button,
 }
 
 .notes{
-    position: relative;
     //background-color: cyan;
 
     /*&::before{
@@ -55,6 +56,7 @@ button,
     }*/
 }
 button{
+    width: 100px;
     opacity: 0.5;
 }
 
@@ -63,20 +65,15 @@ button{
 }
 
 .list{
-    position: relative;
-
-    &-input-text-style{
-        text-decoration: line-through;
-        opacity: 0.5;
-    }
     
     .delete{
         width: 25px;
         height: 25px;
-        //display: block;
-        position: absolute;
-        right: 20px;
-        top: 12px;
+        margin-left: 10px;
+        //display: none;
+        //position: absolute;
+        //right: 20px;
+        //top: 12px;
         background: url(img/icon_delete.png) no-repeat;
         background-size: 25px, 25px;
         opacity: 0.5;
@@ -91,9 +88,9 @@ button{
 .all-checkbox{
     width: 32px;
     height: 32px;
-    position: absolute;
-    left: 10%;
-    top: 10px;
+    //position: absolute;
+    //left: 10%;
+    //top: 10px;
     background: url(img/arrow-down.png) no-repeat;
     opacity: 0.3;
 
@@ -106,6 +103,50 @@ button{
     }
     
 }
-.row{
-    position: relative;
+input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+
+    //margin-right: 10px;
 }
+
+input[name="todo"]{
+    width: 380px;
+    display: none;
+    padding: 10px 10px 10px 8px;
+    //padding-left: 8px;
+}
+
+label{
+    width: 380px;
+    padding: 10px 10px 10px 8px;
+    overflow: hidden;
+    //margin-left: 10px;
+}
+.line-through{
+    text-decoration: line-through;
+}
+
+.edit{
+    & input[name="todo"]{
+        display: block;
+        
+        //padding-left: 8px;
+    }
+    & label{
+        display: none;
+        //margin-left: 10px;
+    }
+
+}
+.line{
+    border-bottom: 2px solid rgba(0,0,0,0.3);
+    
+}
+/*
+label{
+    position: absolute;
+    top: 0;
+    left: 32px;
+    z-index: 10;
+}*/

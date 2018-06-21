@@ -12,23 +12,31 @@
 
 <body>
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center header">
             <h1>todos</h1>
         </div>
-        <div class="row justify-content-center">
-            <div class="all-checkbox"></div>
-            <div class="col-md-4 notes">
-                <div class="wrap">
-                    <input id="create" type="text" placeholder="What needs to be done?" autofocus>
-                </div>
+        <div class="justify-content-center main">
+            <div class="row justify-content-center align-items-center new-task">
+                <div class="all-checkbox"></div>
+    
+                    <input id="new-task" type="text" placeholder="What needs to be done?" autofocus>
+                <button id="add">Add</button>
             </div>
-            <button id="enter" class="col-md-1 align-self-start">Enter</button>
+            <ul class="justify-content-center list">
+                <li class="row justify-content-center">
+                    <div class="row align-items-center line">
+                        <input type="checkbox">
+                        <label onselectstart="return false" onmousedown="return false">do</label>
+                        <input name="todo" type="text">
+                        <div class="delete"></div>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </div>
-    <script src="js/lodash.js"></script>
-    <script src="js/jquery-3.3.1.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
+        <script src="js/lodash.js"></script>
+        <script src="js/jquery-3.3.1.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="js/index.js"></script>
 </body>
 
 </html>

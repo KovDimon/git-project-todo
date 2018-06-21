@@ -2,56 +2,74 @@ var Count = 0;
 var CountActive = 0;
 var MyValue;
 var $MyDelete;
+var $List = $('.list');
 
-document.getElementById('create').oninput = function(){
-    document.getElementById('create').innerHTML = document.getElementById('create').value;
+function createNewElement(){
+    var MyNewTask = document.getElementById('new-task').value;
+    if(MyNewTask == 0) return;
+    console.log($('#new-task').val());
+    document.getElementById('new-task').value='';
+    
+    var tmp = '<li class="row justify-content-center">\
+    <div class="row align-items-center line">\
+        <input type="checkbox">\
+        <label><%-text%></label>\
+        <input name="todo" type="text">\
+        <div class="delete"></div>\
+    </div>\
+</li>';
+    $List.append(_.template(tmp)({text : MyNewTask}));
+    
 }
 
-$("button").on("click", function(){ 
-    MyValue = $("#create").text();
-    if(MyValue == 0) return;
+$("button").on("click", createNewElement);
+$(document).keypress(function(event){
 
-    $(".notes").append("<div>");
-    var $MyDivLastChild = $(".notes > div:last-child");
-    $MyDivLastChild.addClass("row justify-content-center list");
-    $MyDivLastChild.append("<input>");
-    $MyDivLastChild.find("input:last-child").attr("type","checkbox");
-    $MyDivLastChild.find("input:last-child").addClass("col-md-1 align-self-center");
-    $MyDivLastChild.append("<input>");
-    $MyDivLastChild.find("input:last-child").attr({"name":"todo", "type":"text", "value":MyValue});
-    $MyDivLastChild.find("input:last-child").prop("disabled", true);
-    $MyDivLastChild.find("input:last-child").wrap('<div class="wrapper col-md-11"></div>');
-    $MyDivLastChild.find(".wrapper").append("<div>");
-    $(".wrapper div").addClass("delete");
-    //$(".notes > div:last-child").addClass("row justify-content-center list");
-    //$(".notes > div:last-child").append("<input>");
-    //$(".notes > div:last-child input:last-child").attr("type","checkbox");
-    //$(".notes > div:last-child input:last-child").addClass("col-md-1 align-self-center");
-    //$(".notes > div:last-child").append("<input>");
-    //$(".notes > div:last-child input:last-child").attr({"name":"todo", "type":"text", "value":MyValue});
-    /*$(".notes div:last-child input:last-child").addClass("col-md-11");*/
-    //$(".notes > div:last-child input:last-child").prop("disabled", true);
-    //$(".notes > div:last-child input:last-child").wrap('<div class="wrapper col-md-11"></div>');
-    //$(".notes > div:last-child .wrapper").append("<div>");
-    //$Myinput.append("<input>");
+    if(event.which == 13){
+        createNewElement();
+    }
+});
+   
+$List.on('dblclick','li div label', function(){
+    var $Label = $(this);
+    var $Input = $Label.next();
+
+    $Input.val($Label.text());
+    $Label.parent().toggleClass('edit');
+    $Input.focus();
+});
     
-    //$(".notes input:last-child").attr({"name":"todo", "type":"text", "value":MyValue});
-    //$(".notes input:last-child").prop("disabled", true);
+$List.on('blur','li div input', function(){
+    var $Input = $(this);
 
-    $(".wrapper").on("dblclick", function(event){
-        var target = event.target;
+    $Input.prev().text($Input.val());
+    $Input.parent().toggleClass('edit');
+});
+
+$List.on('click','li .delete', function(){
+    $(this).closest('li').remove();
+});
+
+$List.on('click','li input[type="checkbox"]',function(){
+    $(this).next().toggleClass('line-through');
+});
+
+
+
+
+        /*var target = $(this).;
         target.removeAttribute('disabled');
         target.setAttribute('name','edit');
         if(window.getSelection()){
             window.getSelection().removeAllRanges();
         }
-        $('input[name="edit"] + div').hide();
+        $('input[name="edit"] + div').hide();*/
         //$MyDelete = $('input[name="edit"] + div').detach();
         //$('input[name="todo"]').prop("disabled", false);
         //alert("Hello");
         //target.setAttribute('autofocus', true);
-    });
-
+        
+/*
     $('input[name="todo"]').on("blur", function(){
         $('input[name="edit"]').prop("disabled", true);
         $('input[name="edit"] + div').show();
@@ -105,12 +123,7 @@ $("button").on("click", function(){
     /*document.getElementsByName('todo')[Count].ondblclick = function(){
         alert("Hello");
     }*/
-    //$(".notes input:last-child").prop("disabled", true);
-    $("#create").text("");
+    //$(".notes input:last-child").prop("disabled", true);*/
+    /*$("#create").text("");
     document.getElementById('create').value='';
-    Count++;
-});
-
-
-
-console.log(MyValue);
+    Count++;*/
