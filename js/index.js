@@ -3,14 +3,15 @@ var CountActive = 0;
 var MyValue;
 var $MyDelete;
 var $List = $('.list');
+var todoList = [];
+var index;
 
-function createNewElement(){
-    var MyNewTask = document.getElementById('new-task').value;
-    if(MyNewTask == 0) return;
-    console.log($('#new-task').val());
-    document.getElementById('new-task').value='';
-    
-    var tmp = '<li class="row justify-content-center">\
+function doId(){
+    return Math.random().toString(36).substr(2,16);
+}
+
+function element(elementText,numberId){
+    var tmp = '<li id="<%-id%>"class="row justify-content-center">\
     <div class="row align-items-center line">\
         <input type="checkbox">\
         <label><%-text%></label>\
@@ -18,8 +19,33 @@ function createNewElement(){
         <div class="delete"></div>\
     </div>\
 </li>';
-    $List.append(_.template(tmp)({text : MyNewTask}));
+$List.append(_.template(tmp)({text : elementText, id : numberId}));
+}
+
+function selectElementToArray(array,id){
+    for(var i = 0; i < array.length; i++){
+        if(id != array[i].todoId) continue;
+        break;
+    }
+    return i;
     
+}
+function createNewElement(){
+    var MyNewTask = document.getElementById('new-task').value;
+    if(MyNewTask == 0) return;
+    
+    document.getElementById('new-task').value='';
+
+    var i = todoList.length;
+    var todoObject = {
+        todoId : doId(),
+        todo : MyNewTask,
+        check : false
+    };
+    todoList[i] = todoObject;
+    element(todoList[i].todo, todoList[i].todoId);
+    
+console.log(todoList);
 }
 
 $("button").on("click", createNewElement);
@@ -29,29 +55,41 @@ $(document).keypress(function(event){
         createNewElement();
     }
 });
+
+$List.on('click','li .delete', function(){
+    var $li = $(this).closest('li');
+    var i = selectElementToArray(todoList,$li.attr('id'));
+    todoList.splice(i,1);
+    $li.remove();
+    console.log(todoList);
+    console.log(i);
+});
    
 $List.on('dblclick','li div label', function(){
     var $Label = $(this);
+    var $li = $(this).closest('li');
     var $Input = $Label.next();
+    index = selectElementToArray(todoList,$li.attr('id'));
 
-    $Input.val($Label.text());
+    $Input.val(todoList[index].todo);
     $Label.parent().toggleClass('edit');
     $Input.focus();
 });
     
 $List.on('blur','li div input', function(){
     var $Input = $(this);
-
-    $Input.prev().text($Input.val());
+    todoList[index].todo = $Input.val();
+    $Input.prev().text(todoList[index].todo);
     $Input.parent().toggleClass('edit');
-});
-
-$List.on('click','li .delete', function(){
-    $(this).closest('li').remove();
+    console.log(todoList);
 });
 
 $List.on('click','li input[type="checkbox"]',function(){
+    var $li = $(this).closest('li');
+    var i = selectElementToArray(todoList,$li.attr('id'));
+    todoList[i].check = 'true';
     $(this).next().toggleClass('line-through');
+    console.log(todoList);
 });
 
 
