@@ -8,6 +8,10 @@ h1, h2, h3,h4, h5, h6, p,ul, li,label{
     @include clear;
 }
 
+#clear-completed{
+    color: black;
+}
+
 li{
     list-style: none;
 }
@@ -84,25 +88,32 @@ button{
         }
     }
 }
-
-.all-checkbox{
-    width: 32px;
-    height: 32px;
-    //position: absolute;
-    //left: 10%;
-    //top: 10px;
-    background: url(img/arrow-down.png) no-repeat;
-    opacity: 0.3;
-
-    &-marker{
-        opacity: 1;
+.main{
+    &-add-task{
+        width: 440px;
     }
-
-    &:hover{
-        cursor: pointer;
+    & input[type="submit"]{
+        width: 95px;
+        height: 40px;
     }
+    &-all-checkbox{
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+        background: url(img/arrow-down.png) no-repeat -5px 0;
+        opacity: 0.3;
     
+        &-marker{
+            opacity: 1;
+        }
+    
+        &:hover{
+            cursor: pointer;
+        }
+        
+    }
 }
+
 input[type="checkbox"]{
     width: 15px;
     height: 15px;
@@ -125,6 +136,7 @@ label{
 }
 .line-through{
     text-decoration: line-through;
+    opacity: 0.5;
 }
 
 .edit{
@@ -141,6 +153,32 @@ label{
 }
 .line{
     border-bottom: 2px solid rgba(0,0,0,0.3);
+    
+}
+
+.footer-counters{
+    width: 430px;
+    padding: 10px 0;
+    //border-bottom: 1px solid rgba(0,0,0,0.2);
+    background-color: lightgray;
+}
+.footer-buttons{
+    padding: 10px 0;
+    width: 430px;
+    //border-bottom: 2px solid rgba(0,0,0,0.3);
+    background-color: lightgray;
+    
+}
+a{
+    color: black;
+}
+.current-page{
+    color: blue;
+    text-decoration: none !important;
+    cursor: text;
+}
+.paginator{
+    padding: 20px 0;
     
 }
 /*

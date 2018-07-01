@@ -1,167 +1,231 @@
-var Count = 0;
-var CountActive = 0;
-var MyValue;
-var $MyDelete;
-var $List = $('.list');
-var todoList = [];
-var index;
-
-function doId(){
+let $list = $('.list');
+let $footer = $('.footer');
+let $allCheckbox = $('.main-all-checkbox');
+let $clearCompleted = $('#clear-completed');
+let $paginator = $('.paginator');
+let todoList = [];
+let index;
+let toggleButtons = 'all';
+let allCheckboxButton;
+//let numberPage = 1;
+let allPage;
+//
+function makeId(){
     return Math.random().toString(36).substr(2,16);
 }
 
-function element(elementText,numberId){
-    var tmp = '<li id="<%-id%>"class="row justify-content-center">\
-    <div class="row align-items-center line">\
-        <input type="checkbox">\
-        <label><%-text%></label>\
-        <input name="todo" type="text">\
-        <div class="delete"></div>\
-    </div>\
-</li>';
-$List.append(_.template(tmp)({text : elementText, id : numberId}));
-}
-
-function selectElementToArray(array,id){
-    for(var i = 0; i < array.length; i++){
-        if(id != array[i].todoId) continue;
-        break;
+function showCountersAndButtons(){
+    let n = todoList.length;
+    
+    if(n){
+        $footer.show();
+        $allCheckbox.show();
+    }else{
+        $footer.hide();
+        $allCheckbox.hide();
     }
-    return i;
-    
-}
-function createNewElement(){
-    var MyNewTask = document.getElementById('new-task').value;
-    if(MyNewTask == 0) return;
-    
-    document.getElementById('new-task').value='';
+    let m = todoList.filter(function(obj){
+        return obj.completed === true;
+    }).length;
 
-    var i = todoList.length;
-    var todoObject = {
-        todoId : doId(),
-        todo : MyNewTask,
-        check : false
+    (m === 0) ? $clearCompleted.hide() : $clearCompleted.show();
+
+    $('#'+ toggleButtons).prop('checked',true);
+    $('.all-items').text(n);
+    $('.completed-items').text(m);
+}
+
+function showElements(){
+    let out = '';
+    let check;
+    let classAdd;
+    let array;
+    let n;
+    let tmp = $('#line-template').html();
+    switch(toggleButtons){
+        case 'active': array = todoList.filter(function(obj){
+                                    return obj.completed === false;
+                                }); break;
+        case 'completed': array = todoList.filter(function(obj){
+                                    return obj.completed === true;
+                                }); break;
+        default: array = todoList;
+    }
+    n = array.length;
+    for(let i = 5*(numberPage-1);i < 5*numberPage && i < n; i++){ //i < 5*numberPage-1 &&
+        if(array[i].completed){
+            check = 'checked';
+            classAdd = 'line-through';
+        }else{
+            check = '';
+            classAdd = '';
+        }
+        out += _.template(tmp)({text : array[i].todo, id : array[i].todoId, 
+            checked : check, className : classAdd});
+    }
+    $list.html(out);
+    console.log(todoList);
+    showCountersAndButtons();
+}
+
+function showPaginator(number){
+    let out = '';
+    let tmp = $('#paginator-element').html();
+    let n = todoList.length/5;
+
+    for(let i = 1; i <= n; i++){
+        out += _.template(tmp)({id : i, number : i});
+    }
+        
+    $paginator.html(out);
+    $paginator.children().eq(number-1).addClass('current-page');
+    console.log(numberPage);
+}
+
+function showLastPage(){
+    let n = todoList.length/5;
+    $paginator.find('#'+ numberPage).removeClass('current-page');
+    numberPage = Math.floor(todoList.length/5);
+    if(n > numberPage){
+        numberPage++;
+    showPaginator(numberPage);
+    }
+    $('.container a:last-child').addClass('current-page');
+}
+
+$("#add").on("click", function(event){
+    event.preventDefault();
+    let newTask = $('#new-task').val();
+    if(newTask == 0) return;
+    
+    $('#new-task').val('');
+
+    let todoObject = {
+        todoId : makeId(),
+        todo : newTask,
+        completed : false
     };
-    todoList[i] = todoObject;
-    element(todoList[i].todo, todoList[i].todoId);
+    todoList.push(todoObject);
+    showLastPage();
+    showElements();
+    localStorage.setItem('todo',JSON.stringify(todoList));
+    localStorage.setItem('numberPage',JSON.stringify(numberPage));
     
-console.log(todoList);
-}
-
-$("button").on("click", createNewElement);
-$(document).keypress(function(event){
-
-    if(event.which == 13){
-        createNewElement();
-    }
+    
 });
 
-$List.on('click','li .delete', function(){
-    var $li = $(this).closest('li');
-    var i = selectElementToArray(todoList,$li.attr('id'));
+$list.on('click','li .delete', function(){
+    let $li = $(this).closest('li');
+    let i = todoList.findIndex(x => x.todoId === $li.attr('id'));
     todoList.splice(i,1);
-    $li.remove();
+    //$li.remove();
+    showPaginator();
+    showElements();
+    localStorage.setItem('todo',JSON.stringify(todoList));
     console.log(todoList);
     console.log(i);
 });
    
-$List.on('dblclick','li div label', function(){
-    var $Label = $(this);
-    var $li = $(this).closest('li');
-    var $Input = $Label.next();
-    index = selectElementToArray(todoList,$li.attr('id'));
+$list.on('dblclick','li div label', function(){
+    let $Label = $(this);
+    let $li = $(this).closest('li');
+    let $Input = $Label.next();
+    index = todoList.findIndex(x => x.todoId === $li.attr('id'));
 
     $Input.val(todoList[index].todo);
     $Label.parent().toggleClass('edit');
     $Input.focus();
 });
     
-$List.on('blur','li div input', function(){
-    var $Input = $(this);
+$list.on('blur','li div input[name="todo"]', function(){
+    let $Input = $(this);
     todoList[index].todo = $Input.val();
     $Input.prev().text(todoList[index].todo);
     $Input.parent().toggleClass('edit');
+    showElements();
+    localStorage.setItem('todo',JSON.stringify(todoList));
     console.log(todoList);
 });
 
-$List.on('click','li input[type="checkbox"]',function(){
-    var $li = $(this).closest('li');
-    var i = selectElementToArray(todoList,$li.attr('id'));
-    todoList[i].check = 'true';
-    $(this).next().toggleClass('line-through');
-    console.log(todoList);
-});
-
-
-
-
-        /*var target = $(this).;
-        target.removeAttribute('disabled');
-        target.setAttribute('name','edit');
-        if(window.getSelection()){
-            window.getSelection().removeAllRanges();
-        }
-        $('input[name="edit"] + div').hide();*/
-        //$MyDelete = $('input[name="edit"] + div').detach();
-        //$('input[name="todo"]').prop("disabled", false);
-        //alert("Hello");
-        //target.setAttribute('autofocus', true);
-        
-/*
-    $('input[name="todo"]').on("blur", function(){
-        $('input[name="edit"]').prop("disabled", true);
-        $('input[name="edit"] + div').show();
-        //$MyDelete.insertAfter('input[name="edit"]');
-        $('input[name="edit"]').attr("name","todo");
-        //alert("Hello");
-    });
-
-    $(".delete").on("click", function(event){
-        var target = event.target;
-        MyDelete=target.closest('.list');
-        console.log(document.getElementsByClassName('input')[0]);
-        MyDelete.remove();
-    });
-
-    $('input[type="checkbox"]').on("click", function(event){
-        var target = event.target;
-        var MyDecoration=target.closest('.list');
-        if(target.checked){
-            MyDecoration.children[1].children[0].classList.add('list-input-text-style');
-        }else{
-            MyDecoration.children[1].children[0].classList.remove('list-input-text-style');
-        }
-        console.log(MyDecoration.children);
-        return false;
-    });
-
-    $(".all-checkbox").on("click", function(){
-        var MyAllCheckbox = document.getElementsByClassName('all-checkbox')[0];
-        if(MyAllCheckbox.classList.contains("all-checkbox-marker")){
-            //$MyAllCheckbox.removeClass("all-checkbox-marker");
-           // $(".all-checkbox").removeClass("all-checkbox-marker");
-            $('input[type="checkbox"]').prop("checked", false);
-        }else{
-            //$MyAllCheckbox.addClass("all-checkbox-marker");
-            //$(".all-checkbox").addClass("all-checkbox-marker");
-            $('input[type="checkbox"]').prop("checked", true);
-        }
-        MyAllCheckbox.classList.toggle("all-checkbox-marker");
-        $('input[type="checkbox"]').trigger("click");
-        return false;
-    });    
-
-    //document.getElementsByClassName('wrapper').onsele
-
-    $(".wrapper").on("mousedown", function(){
-        //return false;
-    });
-
+$list.on('click','li input[type="checkbox"]',function(){
+    let $li = $(this).closest('li');
+    let i = todoList.findIndex(x => x.todoId === $li.attr('id'));
     
-    /*document.getElementsByName('todo')[Count].ondblclick = function(){
-        alert("Hello");
-    }*/
-    //$(".notes input:last-child").prop("disabled", true);*/
-    /*$("#create").text("");
-    document.getElementById('create').value='';
-    Count++;*/
+    if(todoList[i].completed){
+        todoList[i].completed = false;
+    }else{
+        todoList[i].completed = true;
+    }
+    allCheckboxButton = false;
+    //console.log(check);
+    showElements();
+    $allCheckbox.removeClass('main-all-checkbox-marker');
+    localStorage.setItem('todo',JSON.stringify(todoList));
+    localStorage.setItem('allCheckboxButton',JSON.stringify(allCheckboxButton));
+    //$(this).next().toggleClass('line-through');
+    console.log(todoList);
+});
+
+$('.footer-buttons').on('change','div input', function(){
+    toggleButtons = $(this).attr('value');
+    showElements();
+    localStorage.setItem('toggleButtons', toggleButtons);
+    console.log($(this).attr('value'));
+});
+
+$allCheckbox.on('click', function() {
+    let array;
+
+    if(allCheckboxButton) {
+        todoList.forEach(function(obj) {
+            obj.completed = false;
+        });
+        allCheckboxButton = false;
+    }else{
+        todoList.forEach(function(obj){
+            obj.completed = true;
+        });
+        allCheckboxButton = true;
+    }
+    
+    $allCheckbox.toggleClass('main-all-checkbox-marker');
+    showElements();
+    localStorage.setItem('allCheckboxButton',JSON.stringify(allCheckboxButton));
+    localStorage.setItem('todo',JSON.stringify(todoList));
+    console.log(array);
+});
+
+$clearCompleted.on('click', function(event){
+    event.preventDefault();
+    todoList = todoList.filter(function(obj) {
+        return obj.completed === false;
+    });
+    showElements();
+    localStorage.setItem('todo',JSON.stringify(todoList));
+});
+
+$paginator.on('click', 'a', function(event){
+    let $a = $(this);
+    let id = $a.attr('id');
+    event.preventDefault();
+    //currentPage = numberPage;
+    numberPage = $a.text();
+    //$(this).text(currentPage);
+    showPaginator(numberPage);
+    showElements();
+    localStorage.setItem('numberPage',JSON.stringify(numberPage));
+})
+
+if(localStorage.getItem('todo') != undefined) {
+    
+    todoList = JSON.parse(localStorage.getItem('todo'));
+    toggleButtons = localStorage.getItem('toggleButtons');
+    allCheckboxButton = JSON.parse(localStorage.getItem('allCheckboxButton'));
+    numberPage = JSON.parse(localStorage.getItem('numberPage'));
+    if(allCheckboxButton) {
+        $allCheckbox.addClass('main-all-checkbox-marker');
+    }
+    showPaginator(numberPage);
+    showElements();
+    console.log(toggleButtons);
+}

@@ -8,6 +8,10 @@ h1, h2, h3, h4, h5, h6, p, ul, li, label {
   padding: 0;
 }
 
+#clear-completed {
+  color: black;
+}
+
 li {
   list-style: none;
 }
@@ -73,18 +77,28 @@ button {
   cursor: pointer;
 }
 
-.all-checkbox {
+.main-add-task {
+  width: 440px;
+}
+
+.main input[type="submit"] {
+  width: 95px;
+  height: 40px;
+}
+
+.main-all-checkbox {
   width: 32px;
   height: 32px;
-  background: url(img/arrow-down.png) no-repeat;
+  margin-right: 10px;
+  background: url(img/arrow-down.png) no-repeat -5px 0;
   opacity: 0.3;
 }
 
-.all-checkbox-marker {
+.main-all-checkbox-marker {
   opacity: 1;
 }
 
-.all-checkbox:hover {
+.main-all-checkbox:hover {
   cursor: pointer;
 }
 
@@ -107,6 +121,7 @@ label {
 
 .line-through {
   text-decoration: line-through;
+  opacity: 0.5;
 }
 
 .edit input[name="todo"] {
@@ -119,6 +134,32 @@ label {
 
 .line {
   border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.footer-counters {
+  width: 430px;
+  padding: 10px 0;
+  background-color: lightgray;
+}
+
+.footer-buttons {
+  padding: 10px 0;
+  width: 430px;
+  background-color: lightgray;
+}
+
+a {
+  color: black;
+}
+
+.current-page {
+  color: blue;
+  text-decoration: none !important;
+  cursor: text;
+}
+
+.paginator {
+  padding: 20px 0;
 }
 
 /*
