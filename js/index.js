@@ -52,6 +52,7 @@ function showElements(){
         default: array = todoList;
     }
     n = array.length;
+    showPaginator(n);
     for(let i = 5*(numberPage-1);i < 5*numberPage && i < n; i++){ //i < 5*numberPage-1 &&
         if(array[i].completed){
             check = 'checked';
@@ -66,31 +67,37 @@ function showElements(){
     $list.html(out);
     console.log(todoList);
     showCountersAndButtons();
+    
 }
 
-function showPaginator(number){
+function showPaginator(n){
     let out = '';
     let tmp = $('#paginator-element').html();
-    let n = todoList.length/5;
-
-    for(let i = 1; i <= n; i++){
+    let m = n/5;
+    if(n > 5){
+    for(let i = 1; i <= Math.ceil(m); i++){
         out += _.template(tmp)({id : i, number : i});
     }
-        
+    }
     $paginator.html(out);
-    $paginator.children().eq(number-1).addClass('current-page');
+    if(numberPage > Math.ceil(m)){
+        numberPage--;
+    }
+    $paginator.children().eq(numberPage-1).addClass('current-page');
     console.log(numberPage);
 }
 
 function showLastPage(){
-    let n = todoList.length/5;
     $paginator.find('#'+ numberPage).removeClass('current-page');
-    numberPage = Math.floor(todoList.length/5);
-    if(n > numberPage){
-        numberPage++;
-    showPaginator(numberPage);
-    }
+    numberPage = Math.ceil(todoList.length/5);
+
     $('.container a:last-child').addClass('current-page');
+}
+function deleteLastPage() {
+    if(numberPage > Math.ceil(todoList.length/5)){
+
+    }
+    
 }
 
 $("#add").on("click", function(event){
@@ -119,7 +126,6 @@ $list.on('click','li .delete', function(){
     let i = todoList.findIndex(x => x.todoId === $li.attr('id'));
     todoList.splice(i,1);
     //$li.remove();
-    showPaginator();
     showElements();
     localStorage.setItem('todo',JSON.stringify(todoList));
     console.log(todoList);
@@ -211,7 +217,6 @@ $paginator.on('click', 'a', function(event){
     //currentPage = numberPage;
     numberPage = $a.text();
     //$(this).text(currentPage);
-    showPaginator(numberPage);
     showElements();
     localStorage.setItem('numberPage',JSON.stringify(numberPage));
 })
