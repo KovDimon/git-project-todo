@@ -7,7 +7,7 @@ let todoList = [];
 let index;
 let toggleButtons = 'all';
 let allCheckboxButton;
-//let numberPage = 1;
+let numberPage = 1;
 let allPage;
 //
 function makeId(){
@@ -53,7 +53,7 @@ function showElements(){
     }
     n = array.length;
     showPaginator(n);
-    for(let i = 5*(numberPage-1);i < 5*numberPage && i < n; i++){ //i < 5*numberPage-1 &&
+    for(let i = 5*(numberPage-1);i < 5*numberPage && i < n; i++){
         if(array[i].completed){
             check = 'checked';
             classAdd = 'line-through';
@@ -83,6 +83,9 @@ function showPaginator(n){
     if(numberPage > Math.ceil(m)){
         numberPage--;
     }
+	if(numberPage <= 0){
+		numberPage = 1;
+	}
     $paginator.children().eq(numberPage-1).addClass('current-page');
     console.log(numberPage);
 }
@@ -92,12 +95,6 @@ function showLastPage(){
     numberPage = Math.ceil(todoList.length/5);
 
     $('.container a:last-child').addClass('current-page');
-}
-function deleteLastPage() {
-    if(numberPage > Math.ceil(todoList.length/5)){
-
-    }
-    
 }
 
 $("#add").on("click", function(event){
@@ -126,6 +123,8 @@ $list.on('click','li .delete', function(){
     let i = todoList.findIndex(x => x.todoId === $li.attr('id'));
     todoList.splice(i,1);
     //$li.remove();
+	allCheckboxButton = false;
+	$allCheckbox.removeClass('main-all-checkbox-marker');
     showElements();
     localStorage.setItem('todo',JSON.stringify(todoList));
     console.log(todoList);
@@ -206,6 +205,8 @@ $clearCompleted.on('click', function(event){
     todoList = todoList.filter(function(obj) {
         return obj.completed === false;
     });
+	allCheckboxButton = false;
+	$allCheckbox.removeClass('main-all-checkbox-marker');
     showElements();
     localStorage.setItem('todo',JSON.stringify(todoList));
 });
