@@ -17,7 +17,6 @@
         </div>
         <div class="justify-content-center main">
             <div class="row justify-content-center new-task">
-
                 <form class="row justify-content-center align-items-center main-add-task" action="">
                     <div class="main-all-checkbox"></div>
                     <input id="new-task" type="text" placeholder="What needs to be done?" autofocus>
@@ -59,17 +58,26 @@
         </div>
     </div>
     <script type="text/template" id="line-template">
-            <li id="<%-id%>" class="row justify-content-center">
+			<%items.forEach(function(item){%>
+            <li id="<%-item.todoId%>" class="row justify-content-center">
                 <div class="row align-items-center line">
-                    <input type="checkbox"<%-checked%>>
-                    <label class="<%-className%>"><%-text%></label>
+                    <%if(item.completed){%>
+                        <input type="checkbox" checked>
+                        <label class="line-through"><%-item.todo%></label>
+                    <%}else{%>
+                        <input type="checkbox">
+                        <label><%-item.todo%></label>
+					<%}%>
                     <input name="todo" type="text">
                     <div class="delete"></div>
                 </div>
             </li>
+			<%});%>
         </script>
     <script type="text/template" id="paginator-element">
-            <a id="<%-id%>" href=""><%-number%></a>
+        <%pages.forEach(function(page){%>
+            <a id="<%-page%>" href=""><%-page%></a>
+            <%});%>
         </script>
     <script src="js/lodash.js"></script>
     <script src="js/jquery-3.3.1.js"></script>

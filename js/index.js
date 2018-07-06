@@ -8,8 +8,7 @@ let index;
 let toggleButtons = 'all';
 let allCheckboxButton;
 let numberPage = 1;
-let allPage;
-//
+
 function makeId(){
     return Math.random().toString(36).substr(2,16);
 }
@@ -36,9 +35,7 @@ function showCountersAndButtons(){
 }
 
 function showElements(){
-    let out = '';
-    let check;
-    let classAdd;
+    let html = '';
     let array;
     let n;
     let tmp = $('#line-template').html();
@@ -53,33 +50,25 @@ function showElements(){
     }
     n = array.length;
     showPaginator(n);
-    for(let i = 5*(numberPage-1);i < 5*numberPage && i < n; i++){
-        if(array[i].completed){
-            check = 'checked';
-            classAdd = 'line-through';
-        }else{
-            check = '';
-            classAdd = '';
-        }
-        out += _.template(tmp)({text : array[i].todo, id : array[i].todoId, 
-            checked : check, className : classAdd});
-    }
-    $list.html(out);
-    console.log(todoList);
-    showCountersAndButtons();
     
+	let items = array.slice(5*(numberPage-1),5*numberPage);
+	html = _.template(tmp)({items});
+    $list.html(html);
+    showCountersAndButtons();
 }
 
 function showPaginator(n){
-    let out = '';
+    let html = '';
     let tmp = $('#paginator-element').html();
     let m = n/5;
+    let pages = [];
     if(n > 5){
-    for(let i = 1; i <= Math.ceil(m); i++){
-        out += _.template(tmp)({id : i, number : i});
+        for(let i = 1; i <= Math.ceil(m); i++){
+            pages.push(i);
+        }
+        html = _.template(tmp)({pages});
     }
-    }
-    $paginator.html(out);
+    $paginator.html(html);
     if(numberPage > Math.ceil(m)){
         numberPage--;
     }
@@ -87,7 +76,6 @@ function showPaginator(n){
 		numberPage = 1;
 	}
     $paginator.children().eq(numberPage-1).addClass('current-page');
-    console.log(numberPage);
 }
 
 function showLastPage(){
@@ -122,13 +110,10 @@ $list.on('click','li .delete', function(){
     let $li = $(this).closest('li');
     let i = todoList.findIndex(x => x.todoId === $li.attr('id'));
     todoList.splice(i,1);
-    //$li.remove();
 	allCheckboxButton = false;
 	$allCheckbox.removeClass('main-all-checkbox-marker');
     showElements();
     localStorage.setItem('todo',JSON.stringify(todoList));
-    console.log(todoList);
-    console.log(i);
 });
    
 $list.on('dblclick','li div label', function(){
@@ -136,7 +121,6 @@ $list.on('dblclick','li div label', function(){
     let $li = $(this).closest('li');
     let $Input = $Label.next();
     index = todoList.findIndex(x => x.todoId === $li.attr('id'));
-
     $Input.val(todoList[index].todo);
     $Label.parent().toggleClass('edit');
     $Input.focus();
@@ -149,7 +133,6 @@ $list.on('blur','li div input[name="todo"]', function(){
     $Input.parent().toggleClass('edit');
     showElements();
     localStorage.setItem('todo',JSON.stringify(todoList));
-    console.log(todoList);
 });
 
 $list.on('click','li input[type="checkbox"]',function(){
@@ -162,20 +145,16 @@ $list.on('click','li input[type="checkbox"]',function(){
         todoList[i].completed = true;
     }
     allCheckboxButton = false;
-    //console.log(check);
     showElements();
     $allCheckbox.removeClass('main-all-checkbox-marker');
     localStorage.setItem('todo',JSON.stringify(todoList));
     localStorage.setItem('allCheckboxButton',JSON.stringify(allCheckboxButton));
-    //$(this).next().toggleClass('line-through');
-    console.log(todoList);
 });
 
 $('.footer-buttons').on('change','div input', function(){
     toggleButtons = $(this).attr('value');
     showElements();
     localStorage.setItem('toggleButtons', toggleButtons);
-    console.log($(this).attr('value'));
 });
 
 $allCheckbox.on('click', function() {
@@ -197,7 +176,6 @@ $allCheckbox.on('click', function() {
     showElements();
     localStorage.setItem('allCheckboxButton',JSON.stringify(allCheckboxButton));
     localStorage.setItem('todo',JSON.stringify(todoList));
-    console.log(array);
 });
 
 $clearCompleted.on('click', function(event){
@@ -215,12 +193,10 @@ $paginator.on('click', 'a', function(event){
     let $a = $(this);
     let id = $a.attr('id');
     event.preventDefault();
-    //currentPage = numberPage;
     numberPage = $a.text();
-    //$(this).text(currentPage);
     showElements();
     localStorage.setItem('numberPage',JSON.stringify(numberPage));
-})
+});
 
 if(localStorage.getItem('todo') != undefined) {
     
@@ -233,5 +209,4 @@ if(localStorage.getItem('todo') != undefined) {
     }
     showPaginator(numberPage);
     showElements();
-    console.log(toggleButtons);
 }

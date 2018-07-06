@@ -11,10 +11,19 @@ h1, h2, h3,h4, h5, h6, p,ul, li,label{
 #clear-completed{
     color: black;
     cursor: pointer;
+    
+    &:hover{
+        text-decoration: underline;
+        color: blue;
+    }
 }
 
 li{
     list-style: none;
+}
+
+a{
+    color: black;
 }
 
 h1{
@@ -22,19 +31,24 @@ h1{
     font-size: 70px;
     padding: 10px 0 20px 0;
 }
+
 input{
     border: none;
+
     &:focus{
         outline: none;
     }
 }
 
-//input[name="edit"],
+label{
+    width: 380px;
+    padding: 10px 10px 10px 8px;
+    overflow: hidden;
+}
+
 #new-task{
     height: 50px;
     width: 300px;
-    //text-decoration: line-through;
-    //-webkit-user-select: none;
 }
 
 .wrapper{
@@ -42,27 +56,6 @@ input{
     &-text-style{
         text-decoration: line-through;
     }
-}
-
-.notes{
-    //background-color: cyan;
-
-    /*&::before{
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 10px;
-        opacity: 0.3;
-        width: 32px;
-        height: 32px;
-        background: url(img/arrow-down.png) no-repeat;
-        cursor: pointer;
-    }*/
-}
-button{
-    width: 100px;
-    opacity: 0.5;
 }
 
 .wrap{
@@ -75,10 +68,6 @@ button{
         width: 25px;
         height: 25px;
         margin-left: 10px;
-        //display: none;
-        //position: absolute;
-        //right: 20px;
-        //top: 12px;
         background: url(img/icon_delete.png) no-repeat;
         background-size: 25px, 25px;
         opacity: 0.5;
@@ -89,14 +78,17 @@ button{
         }
     }
 }
+
 .main{
     &-add-task{
         width: 440px;
     }
+
     & input[type="submit"]{
         width: 95px;
         height: 40px;
     }
+
     &-all-checkbox{
         width: 32px;
         height: 32px;
@@ -115,77 +107,55 @@ button{
     }
 }
 
-input[type="checkbox"]{
-    width: 15px;
-    height: 15px;
-
-    //margin-right: 10px;
-}
-
 input[name="todo"]{
     width: 380px;
     display: none;
     padding: 10px 10px 10px 8px;
-    //padding-left: 8px;
 }
 
-label{
-    width: 380px;
-    padding: 10px 10px 10px 8px;
-    overflow: hidden;
-    //margin-left: 10px;
-}
 .line-through{
     text-decoration: line-through;
     opacity: 0.5;
 }
 
 .edit{
+
     & input[name="todo"]{
         display: block;
-        
-        //padding-left: 8px;
-    }
-    & label{
-        display: none;
-        //margin-left: 10px;
     }
 
+    & label{
+        display: none;
+    }
 }
 .line{
     border-bottom: 2px solid rgba(0,0,0,0.3);
-    
+
+    & input[type="checkbox"]{
+        width: 15px;
+        height: 15px;
+        //visibility: hidden;
+    }
 }
 
 .footer-counters{
     width: 430px;
-    padding: 10px 0;
-    //border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding: 10px 5px;
     background-color: lightgray;
 }
 .footer-buttons{
-    padding: 10px 0;
+    padding: 10px 5px;
     width: 430px;
-    //border-bottom: 2px solid rgba(0,0,0,0.3);
     background-color: lightgray;
-    
 }
-a{
-    color: black;
-}
+
 .current-page{
     color: blue;
     text-decoration: none !important;
     cursor: text;
 }
+
 .paginator{
     padding: 20px 0;
     
 }
-/*
-label{
-    position: absolute;
-    top: 0;
-    left: 32px;
-    z-index: 10;
-}*/

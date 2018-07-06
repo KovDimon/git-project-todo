@@ -13,8 +13,17 @@ h1, h2, h3, h4, h5, h6, p, ul, li, label {
   cursor: pointer;
 }
 
+#clear-completed:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
 li {
   list-style: none;
+}
+
+a {
+  color: black;
 }
 
 h1 {
@@ -31,6 +40,12 @@ input:focus {
   outline: none;
 }
 
+label {
+  width: 380px;
+  padding: 10px 10px 10px 8px;
+  overflow: hidden;
+}
+
 #new-task {
   height: 50px;
   width: 300px;
@@ -38,26 +53,6 @@ input:focus {
 
 .wrapper-text-style {
   text-decoration: line-through;
-}
-
-.notes {
-  /*&::before{
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 10px;
-        opacity: 0.3;
-        width: 32px;
-        height: 32px;
-        background: url(img/arrow-down.png) no-repeat;
-        cursor: pointer;
-    }*/
-}
-
-button {
-  width: 100px;
-  opacity: 0.5;
 }
 
 .wrap {
@@ -103,21 +98,10 @@ button {
   cursor: pointer;
 }
 
-input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
-}
-
 input[name="todo"] {
   width: 380px;
   display: none;
   padding: 10px 10px 10px 8px;
-}
-
-label {
-  width: 380px;
-  padding: 10px 10px 10px 8px;
-  overflow: hidden;
 }
 
 .line-through {
@@ -137,20 +121,21 @@ label {
   border-bottom: 2px solid rgba(0, 0, 0, 0.3);
 }
 
+.line input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+}
+
 .footer-counters {
   width: 430px;
-  padding: 10px 0;
+  padding: 10px 5px;
   background-color: lightgray;
 }
 
 .footer-buttons {
-  padding: 10px 0;
+  padding: 10px 5px;
   width: 430px;
   background-color: lightgray;
-}
-
-a {
-  color: black;
 }
 
 .current-page {
@@ -162,12 +147,4 @@ a {
 .paginator {
   padding: 20px 0;
 }
-
-/*
-label{
-    position: absolute;
-    top: 0;
-    left: 32px;
-    z-index: 10;
-}*/
 /*# sourceMappingURL=style.css.map */
