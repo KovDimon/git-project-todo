@@ -8,16 +8,6 @@ h1, h2, h3, h4, h5, h6, p, ul, li, label {
   padding: 0;
 }
 
-#clear-completed {
-  color: black;
-  cursor: pointer;
-}
-
-#clear-completed:hover {
-  text-decoration: underline;
-  color: blue;
-}
-
 li {
   list-style: none;
 }
@@ -32,11 +22,11 @@ h1 {
   padding: 10px 0 20px 0;
 }
 
-input {
+input[type="text"] {
   border: none;
 }
 
-input:focus {
+input[type="text"]:focus {
   outline: none;
 }
 
@@ -51,12 +41,18 @@ label {
   width: 300px;
 }
 
-.wrapper-text-style {
-  text-decoration: line-through;
+#clear-completed {
+  color: black;
+  cursor: pointer;
 }
 
-.wrap {
-  padding-left: 30px;
+#clear-completed:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+#add:focus {
+  outline: none;
 }
 
 .list .delete {
@@ -119,11 +115,16 @@ input[name="todo"] {
 
 .line {
   border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+  padding: 1px 0;
 }
 
 .line input[type="checkbox"] {
   width: 15px;
   height: 15px;
+}
+
+.footer {
+  padding: 20px 0;
 }
 
 .footer-counters {

@@ -8,16 +8,6 @@ h1, h2, h3,h4, h5, h6, p,ul, li,label{
     @include clear;
 }
 
-#clear-completed{
-    color: black;
-    cursor: pointer;
-    
-    &:hover{
-        text-decoration: underline;
-        color: blue;
-    }
-}
-
 li{
     list-style: none;
 }
@@ -32,7 +22,7 @@ h1{
     padding: 10px 0 20px 0;
 }
 
-input{
+input[type="text"]{
     border: none;
 
     &:focus{
@@ -51,15 +41,21 @@ label{
     width: 300px;
 }
 
-.wrapper{
-
-    &-text-style{
-        text-decoration: line-through;
+#clear-completed{
+    color: black;
+    cursor: pointer;
+    
+    &:hover{
+        text-decoration: underline;
+        color: blue;
     }
 }
 
-.wrap{
-    padding-left: 30px; 
+#add{
+
+    &:focus{
+        outline: none;
+    }
 }
 
 .list{
@@ -130,23 +126,28 @@ input[name="todo"]{
 }
 .line{
     border-bottom: 2px solid rgba(0,0,0,0.3);
+    padding: 1px 0;
 
     & input[type="checkbox"]{
         width: 15px;
         height: 15px;
-        //visibility: hidden;
     }
 }
 
-.footer-counters{
-    width: 430px;
-    padding: 10px 5px;
-    background-color: lightgray;
-}
-.footer-buttons{
-    padding: 10px 5px;
-    width: 430px;
-    background-color: lightgray;
+.footer{
+    padding: 20px 0;
+
+    &-counters{
+        width: 430px;
+        padding: 10px 5px;
+        background-color: lightgray;
+    }
+
+    &-buttons{
+        padding: 10px 5px;
+        width: 430px;
+        background-color: lightgray;
+    }
 }
 
 .current-page{

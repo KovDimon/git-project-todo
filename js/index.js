@@ -55,6 +55,8 @@ function showElements(){
 	html = _.template(tmp)({items});
     $list.html(html);
     showCountersAndButtons();
+    $('li .delete').hide();
+$('li input[type="checkbox"]').hide();
 }
 
 function showPaginator(n){
@@ -198,6 +200,18 @@ $paginator.on('click', 'a', function(event){
     localStorage.setItem('numberPage',JSON.stringify(numberPage));
 });
 
+
+
+$list.on('mouseover', 'li .line', function(){
+    $(this).find('.delete').show();
+    $(this).find('input[type="checkbox"]').show();
+});
+
+$list.on('mouseout', 'li .line', function(){
+    $(this).find('.delete').hide();
+    $(this).find('input[type="checkbox"]').hide();
+});
+
 if(localStorage.getItem('todo') != undefined) {
     
     todoList = JSON.parse(localStorage.getItem('todo'));
@@ -207,6 +221,5 @@ if(localStorage.getItem('todo') != undefined) {
     if(allCheckboxButton) {
         $allCheckbox.addClass('main-all-checkbox-marker');
     }
-    showPaginator(numberPage);
     showElements();
 }
