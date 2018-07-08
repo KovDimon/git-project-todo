@@ -47,7 +47,7 @@ label {
 }
 
 #clear-completed:hover {
-  text-decoration: underline;
+  text-decoration: underline !important;
   color: blue;
 }
 

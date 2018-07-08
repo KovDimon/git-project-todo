@@ -56,7 +56,7 @@ function showElements(){
     $list.html(html);
     showCountersAndButtons();
     $('li .delete').hide();
-$('li input[type="checkbox"]').hide();
+	$('li input[type="checkbox"]').hide();
 }
 
 function showPaginator(n){
@@ -203,13 +203,11 @@ $paginator.on('click', 'a', function(event){
 
 
 $list.on('mouseover', 'li .line', function(){
-    $(this).find('.delete').show();
-    $(this).find('input[type="checkbox"]').show();
+	$(this).children().first().addBack('.delete').show();
 });
 
 $list.on('mouseout', 'li .line', function(){
-    $(this).find('.delete').hide();
-    $(this).find('input[type="checkbox"]').hide();
+    $(this).children().first().addBack('.delete').hide();
 });
 
 if(localStorage.getItem('todo') != undefined) {
