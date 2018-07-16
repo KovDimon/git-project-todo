@@ -12,12 +12,9 @@ class TodoView {
         this.$add = $("#add");
         this.$footerButtons = $('.footer-buttons');
         this.$newTask = $('#new-task');
-        //this.$delete = $('li .delete');
-        //this.$inputCheckbox = $('li input[type="checkbox"]');
 	}
 	
 	showElements(items) {
-        //let items = obj.items;
 		let html = _.template(this.templateElement)({items});
         this.$list.html(html);
 		$('li .delete').hide();
@@ -71,14 +68,6 @@ class TodoModel {
     constructor(view){
         this.view = view;
         this.todoList = JSON.parse(localStorage.getItem('todo')) || [];
-        /*this.numberPage = JSON.parse(localStorage.getItem('numberPage'));
-        this.toggleButtons = localStorage.getItem('toggleButtons');
-        this.countAll = this.todoList.length;
-        this.countCompleted = this.todoList.filter(function(obj) {
-			return obj.completed === true;
-		}).length;
-        this.allCheckboxButton = JSON.parse(localStorage.getItem('allCheckboxButton'));
-        this.n;*/
         this.pages;
     }
 
@@ -88,7 +77,6 @@ class TodoModel {
 
     filterArray(toggleButtons, countCompleted, numberPage){
         let array;
-        //let items;
         let tempNumber;
         switch(toggleButtons){
 			case 'active': array = this.todoList.filter(function(obj){
@@ -111,8 +99,6 @@ class TodoModel {
         if(numberPage <= 0){
             numberPage = 1;
         }
-        //console.log(this.numberPage);
-        //console.log(pages);
         return array.slice(5*(numberPage-1), 5*numberPage);
     }
 
@@ -124,25 +110,9 @@ class TodoModel {
             todo : newTask,
             completed : false
         };
-			this.todoList.push(todoObject);
-            //this.countAll++;
-            //numberPage = Math.ceil(this.todoList.length/5);
-		/*else{
-            let i = this.todoList.findIndex(x => x.todoId === id);
-            if(this.todoList[i].completed){
-                this.countCompleted--;
-            }
-            this.todoList.splice(i,1);
-            this.countAll--;
-            this.allCheckboxButton = false;
-        }*/
+		this.todoList.push(todoObject);
         items = this.filterArray(toggleButtons, countCompleted, numberPage);
-        //this.view.showPaginator(this.n, this.numberPage);
-        //this.view.showElements(items);
-        //this.view.showCountersAndButtons(this.countAll, this.countCompleted, 
-            //this.toggleButtons, this.allCheckboxButton);
         localStorage.setItem('todo',JSON.stringify(this.todoList));
-        //localStorage.setItem('numberPage',JSON.stringify(this.numberPage));
         let obj = {array : items, numPages : this.pages};
 		resolve(obj);
 		});
@@ -172,51 +142,36 @@ class TodoModel {
                     }else{
                         this.todoList[i].completed = true;
                         countCompleted++;
-                    }
-                    break;
+                    } break;
                 case 2:
                     this.todoList = this.todoList.filter(function(obj) {
                         return obj.completed === false;
-                    });
-                    break;
+                    }); break;
                 case 3:
                     this.todoList.forEach(function(obj) {
                         obj.completed = false;
-                    }); 
-                    break;
+                    }); break;
                 case 4:
                     this.todoList.forEach(function(obj){
                         obj.completed = true;
-                    });
-                    break;
-                /*case 4:
-                    this.numberPage = numberPage; break;*/
-                    
-                //default: this.toggleButtons = Button;
+                    }); break;
             }
             
             let items = this.filterArray(toggleButtons, countCompleted, numberPage);
-            //this.view.showPaginator(this.n, this.numberPage);
-            //this.view.showElements(items);
-            //this.view.showCountersAndButtons(this.countAll, this.countCompleted, 
-                //this.toggleButtons, this.allCheckboxButton);
-    
             localStorage.setItem('todo',JSON.stringify(this.todoList));
-            //localStorage.setItem('allCheckboxButton',JSON.stringify(this.allCheckboxButton));
-            //localStorage.setItem('toggleButtons', this.toggleButtons);
-            //localStorage.setItem('numberPage',JSON.stringify(this.numberPage));
             let obj = {array : items, numPages : this.pages, countCompl : countCompleted};
             resolve(obj);
         });
     }
 
-    /*editElement($this, task){
-		return new Promise(function (resolve, reject){})
-        let i = this.todoList.findIndex(x => x.todoId === $this.closest('li').attr('id'));
-        this.todoList[i].todo = task;
-        this.view.showEdit($this);
-        localStorage.setItem('todo',JSON.stringify(this.todoList));
-    }*/
+    editElement($this, task){
+		return new Promise ((resolve, reject) => {
+            let i = this.todoList.findIndex(x => x.todoId === $this.closest('li').attr('id'));
+            this.todoList[i].todo = task;
+            localStorage.setItem('todo',JSON.stringify(this.todoList));
+            resolve(task);
+        });
+    }
 }
 
 class TodoController{
@@ -231,7 +186,7 @@ class TodoController{
 			return obj.completed === true;
 		}).length;
         this.allCheckboxButton = JSON.parse(localStorage.getItem('allCheckboxButton')) || false;
-        this.n;
+        this.initEvents();
     }
     clickBtnAdd(event){
         event.preventDefault();
@@ -251,11 +206,12 @@ class TodoController{
         let id = $(event.target).closest('li').attr('id');
         this.countAll--;
         this.allCheckboxButton = false;
-        this.numberPage = Math.ceil(this.countAll/5);
         this.model.removeElement(id, this.toggleButtons, this.countCompleted, this.numberPage)
         .then(obj1 => {this.countCompleted = obj1.countCompl; this.view.showElements(obj1.array);
             this.view.showCountersAndButtons(this.countAll, this.countCompleted,
-            this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
+            this.toggleButtons, this.allCheckboxButton);
+            (this.numberPage > obj1.numPages) ? this.numberPage = obj1.numPages : this.numberPage;
+            this.view.showPaginator(
                 obj1.numPages, this.numberPage); })
         .catch(error => { console.log('ERROR'); });
 		localStorage.setItem('allCheckboxButton',JSON.stringify(this.allCheckboxButton));
@@ -265,7 +221,7 @@ class TodoController{
         let id = $(event.target).closest('li').attr('id');
         
         this.model.setButtons(id, 1, this.toggleButtons, this.countCompleted, this.numberPage)
-        .then(obj => {console.log(this.countCompleted); this.countCompleted = obj.countCompl; console.log(this.countCompleted);this.view.showElements(obj.array);
+        .then(obj => { this.countCompleted = obj.countCompl; this.view.showElements(obj.array);
             this.view.showCountersAndButtons(this.countAll, this.countCompleted,
             this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
                 obj.numPages, this.numberPage); })
@@ -275,11 +231,12 @@ class TodoController{
     
     clickBtnToggle(event){
         this.toggleButtons = $(event.target).attr('value');
+        this.numberPage = 1;
         this.model.setButtons(0, 0, this.toggleButtons, this.countCompleted, this.numberPage)
-        .then(obj => {this.countCompleted = obj.countCompl;this.view.showElements(obj.array);
-            this.view.showCountersAndButtons(this.countAll, this.countCompleted,
-            this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
-                obj.numPages, this.numberPage); })
+        .then(obj => {this.countCompleted = obj.countCompl; this.view.showElements(obj.array); 
+            this.view.showCountersAndButtons(this.countAll, this.countCompleted, 
+                this.toggleButtons, this.allCheckboxButton); 
+            this.view.showPaginator(obj.numPages, this.numberPage); })
         .catch(error => { console.log('ERROR'); });
         localStorage.setItem('toggleButtons', this.toggleButtons);
     }
@@ -294,7 +251,7 @@ class TodoController{
             this.countCompleted = this.countAll;
         }
         this.model.setButtons(0, Button, this.toggleButtons, this.countCompleted, this.numberPage)
-        .then(obj => {console.log(this.countCompleted); this.countCompleted = obj.countCompl; console.log(this.countCompleted);this.view.showElements(obj.array);
+        .then(obj => { this.countCompleted = obj.countCompl; this.view.showElements(obj.array);
             this.view.showCountersAndButtons(this.countAll, this.countCompleted,
             this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
                 obj.numPages, this.numberPage); })
@@ -313,11 +270,17 @@ class TodoController{
                 obj.numPages, this.numberPage); })
         .catch(error => { console.log('ERROR'); });
     }
-    /*clickBtnPaginator(event){
+    clickBtnPaginator(event){
         event.preventDefault();
         let $a = $(event.target);
-        let numberPage = $a.text();
-        this.model.setButtons(0, 4, numberPage);
+        this.numberPage = $a.text();
+        this.model.setButtons(0, 0, this.toggleButtons, this.countCompleted, this.numberPage)
+        .then(obj => {this.countCompleted = obj.countCompl; this.view.showElements(obj.array);
+            this.view.showCountersAndButtons(this.countAll, this.countCompleted,
+            this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
+                obj.numPages, this.numberPage); })
+        .catch(error => { console.log('ERROR'); });
+        localStorage.setItem('numberPage',JSON.stringify(this.numberPage));
     }
     dblclickElement(event){
         let $this = $(event.target);
@@ -328,8 +291,10 @@ class TodoController{
         let $this = $(event.target);
         let text = $this.val();
         $this.prev().text(text);
-        this.model.editElement($this, text);
-    }*/
+        this.model.editElement($this, text)
+        .then(task => {this.view.showEdit($this);})
+        .catch(error => { console.log('ERROR'); });
+    }
 	initEvents(){
         this.view.$add.on('click', event => this.clickBtnAdd(event));
         this.view.$list.on('click','li .delete', event => this.clickBtnRemove(event));
@@ -347,19 +312,16 @@ class TodoController{
         this.view.$list.on('mouseout', 'li .line', function(){
             $(this).children().first().addBack('.delete').hide();
         });
-//console.log(this.view.n)
+        this.model.setButtons(0, 0, this.toggleButtons, this.countCompleted, this.numberPage)
+        .then(obj => {this.countCompleted = obj.countCompl; this.view.showElements(obj.array);
+            this.view.showCountersAndButtons(this.countAll, this.countCompleted,
+            this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
+                obj.numPages, this.numberPage); })
+        .catch(error => { console.log('ERROR'); });
 	}
 }
 (function(){
     let view = new TodoView();
     let model = new TodoModel(view);
     let controller = new TodoController(model, view);
-    controller.initEvents();
 }());
-/*this.view.showElements({items : obj.items, 
-    countAll : this.countAll, countCompleted : this.countCompleted,
-    toggleButtons : this.toggleButtons, allCheckboxButton : this.allCheckboxButton,
-    numberPage : this.numberPage, numPages : obj.numPages});*/
-    /*this.view.showCountersAndButtons(this.countAll, this.countCompleted,
-        this.toggleButtons, this.allCheckboxButton); this.view.showPaginator(
-            obj.numPages, this.numberPage);*/
